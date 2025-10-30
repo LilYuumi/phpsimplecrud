@@ -1,142 +1,90 @@
 <?php
-
-include_once 'config/class-mahasiswa.php';
-$mahasiswa = new Mahasiswa();
-// Menampilkan alert berdasarkan status yang diterima melalui parameter GET
-if(isset($_GET['status'])){
-	// Mengecek nilai parameter GET 'status' dan menampilkan alert yang sesuai menggunakan JavaScript
-	if($_GET['status'] == 'inputsuccess'){
-		echo "<script>alert('Data mahasiswa berhasil ditambahkan.');</script>";
-	} else if($_GET['status'] == 'editsuccess'){
-		echo "<script>alert('Data mahasiswa berhasil diubah.');</script>";
-	} else if($_GET['status'] == 'deletesuccess'){
-		echo "<script>alert('Data mahasiswa berhasil dihapus.');</script>";
-	} else if($_GET['status'] == 'deletefailed'){
-		echo "<script>alert('Gagal menghapus data mahasiswa. Silakan coba lagi.');</script>";
-	}
-}
-$dataMahasiswa = $mahasiswa->getAllMahasiswa();
+include 'config/db-config.php';
+include 'template/header.php';
 
 ?>
-<!doctype html>
-<html lang="en">
-	<head>
-		<?php include 'template/header.php'; ?>
-	</head>
+<body class="layout-fixed fixed-header fixed-footer sidebar-expand-lg sidebar-open bg-body-tertiary">
 
-	<body class="layout-fixed fixed-header fixed-footer sidebar-expand-lg sidebar-open bg-body-tertiary">
+<div class="app-wrapper">
+    <?php include 'template/navbar.php'; ?>
+    <?php include 'template/sidebar.php'; ?>
 
-		<div class="app-wrapper">
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="mb-0">Daftar Barang</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Daftar Barang</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-			<?php include 'template/navbar.php'; ?>
+        <div class="app-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title">Data Barang di N-Kitventory</h3>
+                                <a href="data-input.php" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-circle"></i> Tambah Barang
+                                </a>
+                            </div>
 
-			<?php include 'template/sidebar.php'; ?>
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover text-center">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Barang</th>
+                                            <th>Kategori</th>
+                                            <th>Stok</th>
+                                            <th>Harga</th>
+                                            <th>Supplier</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $no = 1;
+                                        $query = "SELECT * FROM barang ORDER BY id_barang DESC";
+                                        $result = mysqli_query($conn, $query);
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td><?= htmlspecialchars($row['nama_barang']); ?></td>
+                                                <td><?= htmlspecialchars($row['kategori']); ?></td>
+                                                <td><?= $row['stok']; ?></td>
+                                                <td>Rp<?= number_format($row['harga'], 0, ',', '.'); ?></td>
+                                                <td><?= htmlspecialchars($row['supplier']); ?></td>
+                                                <td>
+                                                    <a href="data-edit.php?id_barang=<?= $row['id_barang']; ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
+                                                    <a href="proses/hapus-barang.php?id_barang=<?= $row['id_barang']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?');"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
 
-			<main class="app-main">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-				<div class="app-content-header">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-sm-6">
-								<h3 class="mb-0">Daftar Mahasiswa</h3>
-							</div>
-							<div class="col-sm-6">
-								<ol class="breadcrumb float-sm-end">
-									<li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
-									<li class="breadcrumb-item active" aria-current="page">Beranda</li>
-								</ol>
-							</div>
-						</div>
-					</div>
-				</div>
+    <?php include 'template/footer.php'; ?>
+</div>
 
-				<div class="app-content">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-12">
-								<div class="card">
-									<div class="card-header">
-										<h3 class="card-title">Tabel Mahasiswa</h3>
-										<div class="card-tools">
-											<button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" title="Collapse">
-												<i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-												<i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-											</button>
-											<button type="button" class="btn btn-tool" data-lte-toggle="card-remove" title="Remove">
-												<i class="bi bi-x-lg"></i>
-											</button>
-										</div>
-									</div>
-									<div class="card-body p-0 table-responsive">
-										<table class="table table-striped" role="table">
-											<thead>
-												<tr>
-													<th>No</th>
-													<th>NIM</th>
-													<th>Nama</th>
-													<th>Prodi</th>
-													<th>Provinsi</th>
-													<th>Alamat</th>
-													<th>Telp</th>
-													<th>Email</th>
-													<th class="text-center">Status</th>
-													<th class="text-center">Aksi</th>
-												</tr>
-											</thead>
-											<tbody>
-												<?php
-													if(count($dataMahasiswa) == 0){
-													    echo '<tr class="align-middle">
-															<td colspan="10" class="text-center">Tidak ada data mahasiswa.</td>
-														</tr>';
-													} else {
-														foreach ($dataMahasiswa as $index => $mahasiswa){
-															if($mahasiswa['status'] == 1){
-															    $mahasiswa['status'] = '<span class="badge bg-success">Aktif</span>';
-															} elseif($mahasiswa['status'] == 2){
-															    $mahasiswa['status'] = '<span class="badge bg-danger">Tidak Aktif</span>';
-															} elseif($mahasiswa['status'] == 3){
-															    $mahasiswa['status'] = '<span class="badge bg-warning text-dark">Cuti</span>';
-															} elseif($mahasiswa['status'] == 4){
-															    $mahasiswa['status'] = '<span class="badge bg-primary">Lulus</span>';
-															} 
-															echo '<tr class="align-middle">
-																<td>'.($index + 1).'</td>
-																<td>'.$mahasiswa['nim'].'</td>
-																<td>'.$mahasiswa['nama'].'</td>
-																<td>'.$mahasiswa['prodi'].'</td>
-																<td>'.$mahasiswa['provinsi'].'</td>
-																<td>'.$mahasiswa['alamat'].'</td>
-																<td>'.$mahasiswa['telp'].'</td>
-																<td>'.$mahasiswa['email'].'</td>
-																<td class="text-center">'.$mahasiswa['status'].'</td>
-																<td class="text-center">
-																	<button type="button" class="btn btn-sm btn-warning me-1" onclick="window.location.href=\'data-edit.php?id='.$mahasiswa['id'].'\'"><i class="bi bi-pencil-fill"></i> Edit</button>
-																	<button type="button" class="btn btn-sm btn-danger" onclick="if(confirm(\'Yakin ingin menghapus data mahasiswa ini?\')){window.location.href=\'proses/proses-delete.php?id='.$mahasiswa['id'].'\'}"><i class="bi bi-trash-fill"></i> Hapus</button>
-																</td>
-															</tr>';
-														}
-													}
-												?>
-											</tbody>
-										</table>
-									</div>
-									<div class="card-footer">
-										<button type="button" class="btn btn-primary" onclick="window.location.href='data-input.php'"><i class="bi bi-plus-lg"></i> Tambah Mahasiswa</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</main>
-
-			<?php include 'template/footer.php'; ?>
-
-		</div>
-		
-		<?php include 'template/script.php'; ?>
-
-	</body>
+<?php include 'template/script.php'; ?>
+</body>
 </html>

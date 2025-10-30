@@ -18,7 +18,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-sm-6">
-								<h3 class="mb-0">Aplikasi SICMAS</h3>
+								<h3 class="mb-0">N-Kitventory Apps</h3>
 							</div>
 							<div class="col-sm-6">
 								<ol class="breadcrumb float-sm-end">
@@ -37,7 +37,7 @@
 								<div class="card">
 
 									<div class="card-header">
-										<h3 class="card-title">Selamat Datang!</h3>
+										<h3 class="card-title">Selamat Datang di N-Kitventory!</h3>
 										<div class="card-tools">
 											<button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" title="Collapse">
 												<i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -49,12 +49,29 @@
 										</div>
 									</div>
 
-									<div class="card-body">
-										<p>Halo user! SICMAS merupakan singkatan dari Sistem Informasi CRUD Mahasiswa, aplikasi ini bertujuan untuk mengajarkan bagaimana merancang sebuah dashboard pengelolaan dengan konsep CRUD menggunakan bahasa pemrograman PHP. Penulisan kode menggunakan OOP (Object Oriented Programming). Silakan gunakan secara bijak dan modifikasi sesuai keperluan!</p>
-										<p>Silakan pilih salah satu tombol untuk memulai!</p>
-										<a href="data-input.php" class="btn btn-primary btn-lg"><i class="bi bi-clipboard-data-fill"></i> Input Data Mahasiswa</a>
-										<a href="data-list.php" class="btn btn-success btn-lg"><i class="bi bi-card-list"></i> Lihat Daftar Mahasiswa</a>
-										<a href="data-search.php" class="btn btn-warning btn-lg"><i class="bi bi-search-heart-fill"></i> Cari Mahasiswa</a>
+									<div class="card-body" style="line-height:1.7; font-size:16px;">
+										<p><b>N-Kitventory</b> adalah sistem informasi inventori milik <b>NationKit</b>,
+										sebuah toko yang menyediakan berbagai <i>model kit Gundam</i>, 
+										perlengkapan perakitan, cat, serta komponen pendukung hobi rakitmu.
+										Sistem ini dirancang untuk membantu pengelolaan data stok barang secara 
+										efisien, akurat, dan mudah digunakan oleh admin toko.</p>
+
+										<p>Melalui sistem ini, admin dapat menambah data produk baru, memperbarui stok,
+										serta melihat daftar barang yang tersedia di gudang maupun etalase. 
+										Semua proses dilakukan secara cepat dan terpusat untuk memastikan 
+										ketersediaan produk favorit pelanggan NationKit.</p>
+
+										<div style="margin-top:25px;">
+											<a href="data-input.php" class="btn btn-primary btn-lg">
+												<i class="bi bi-box-seam"></i> Tambah Data Barang
+											</a>
+											<a href="data-list.php" class="btn btn-success btn-lg">
+												<i class="bi bi-card-list"></i> Lihat Daftar Barang
+											</a>
+											<a href="data-search.php" class="btn btn-warning btn-lg text-white">
+												<i class="bi bi-search"></i> Cari Barang
+											</a>
+										</div>
 									</div>
 
 								</div>

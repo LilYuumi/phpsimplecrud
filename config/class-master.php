@@ -1,181 +1,64 @@
 <?php
+// Manggil class Database
+require_once(__DIR__ . "/db-config.php");
 
-// Memasukkan file konfigurasi database
-include_once 'db-config.php';
 
-class MasterData extends Database {
+class MasterData {
 
-    // Method untuk mendapatkan daftar program studi
-    public function getProdi(){
-        $query = "SELECT * FROM tb_prodi";
-        $result = $this->conn->query($query);
-        $prodi = [];
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $prodi[] = [
-                    'id' => $row['kode_prodi'],
-                    'nama' => $row['nama_prodi']
-                ];
-            }
-        }
-        return $prodi;
+    private $db; // Objek koneksi database
+
+    // Konstruktor otomatis jalan saat class diinisialisasi
+    public function __construct() {
+        // Buat koneksi database
+        $this->db = new Database();
     }
 
-    // Method untuk mendapatkan daftar provinsi
-    public function getProvinsi(){
-        $query = "SELECT * FROM tb_provinsi";
-        $result = $this->conn->query($query);
-        $provinsi = [];
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $provinsi[] = [
-                    'id' => $row['id_provinsi'],
-                    'nama' => $row['nama_provinsi']
-                ];
-            }
-        }
-        return $provinsi;
-    }
-
-    // Method untuk mendapatkan daftar status mahasiswa menggunakan array statis
-    public function getStatus(){
-        return [
-            ['id' => 1, 'nama' => 'Aktif'],
-            ['id' => 2, 'nama' => 'Tidak Aktif'],
-            ['id' => 3, 'nama' => 'Cuti'],
-            ['id' => 4, 'nama' => 'Lulus']
-        ];
-    }
-
-    // Method untuk input data program studi
-    public function inputProdi($data){
-        $kodeProdi = $data['kode'];
-        $namaProdi = $data['nama'];
-        $query = "INSERT INTO tb_prodi (kode_prodi, nama_prodi) VALUES (?, ?)";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("ss", $kodeProdi, $namaProdi);
-        $result = $stmt->execute();
-        $stmt->close();
+    // Nampilin semua barang
+    public function getAllBarang() {
+        $query = "SELECT * FROM barang ORDER BY id DESC";
+        $result = $this->db->conn->query($query);
         return $result;
     }
 
-    // Method untuk mendapatkan data program studi berdasarkan kode
-    public function getUpdateProdi($id){
-        $query = "SELECT * FROM tb_prodi WHERE kode_prodi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("s", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $prodi = null;
-        if($result->num_rows > 0){
-            $row = $result->fetch_assoc();
-            $prodi = [
-                'id' => $row['kode_prodi'],
-                'nama' => $row['nama_prodi']
-            ];
-        }
-        $stmt->close();
-        return $prodi;
+    // NAmbah barang baru
+    public function addBarang($nama, $kategori, $stok, $harga) {
+        $nama = $this->db->conn->real_escape_string($nama);
+        $kategori = $this->db->conn->real_escape_string($kategori);
+        $stok = intval($stok);
+        $harga = floatval($harga);
+
+        $query = "INSERT INTO barang (nama, kategori, stok, harga) 
+                  VALUES ('$nama', '$kategori', '$stok', '$harga')";
+        return $this->db->conn->query($query);
     }
 
-    // Method untuk mengedit data program studi
-    public function updateProdi($data){
-        $kodeProdi = $data['kode'];
-        $namaProdi = $data['nama'];
-        $query = "UPDATE tb_prodi SET nama_prodi = ? WHERE kode_prodi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("ss", $namaProdi, $kodeProdi);
-        $result = $stmt->execute();
-        $stmt->close();
-        return $result;
+    // Ambnil data barang dari ID
+    public function getBarangById($id) {
+        $id = intval($id);
+        $query = "SELECT * FROM barang WHERE id = '$id'";
+        $result = $this->db->conn->query($query);
+        return $result->fetch_assoc();
     }
 
-    // Method untuk menghapus data program studi
-    public function deleteProdi($id){
-        $query = "DELETE FROM tb_prodi WHERE kode_prodi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("s", $id);
-        $result = $stmt->execute();
-        $stmt->close();
-        return $result;
+    // Update barang
+    public function updateBarang($id, $nama, $kategori, $stok, $harga) {
+        $id = intval($id);
+        $nama = $this->db->conn->real_escape_string($nama);
+        $kategori = $this->db->conn->real_escape_string($kategori);
+        $stok = intval($stok);
+        $harga = floatval($harga);
+
+        $query = "UPDATE barang 
+                  SET nama='$nama', kategori='$kategori', stok='$stok', harga='$harga' 
+                  WHERE id='$id'";
+        return $this->db->conn->query($query);
     }
 
-    // Method untuk input data provinsi
-    public function inputProvinsi($data){
-        $namaProvinsi = $data['nama'];
-        $query = "INSERT INTO tb_provinsi (nama_provinsi) VALUES (?)";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("s", $namaProvinsi);
-        $result = $stmt->execute();
-        $stmt->close();
-        return $result;
+    // Hapus barang
+    public function deleteBarang($id) {
+        $id = intval($id);
+        $query = "DELETE FROM barang WHERE id = '$id'";
+        return $this->db->conn->query($query);
     }
-
-    // Method untuk mendapatkan data provinsi berdasarkan id
-    public function getUpdateProvinsi($id){
-        $query = "SELECT * FROM tb_provinsi WHERE id_provinsi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $provinsi = null;
-        if($result->num_rows > 0){
-            $row = $result->fetch_assoc();
-            $provinsi = [
-                'id' => $row['id_provinsi'],
-                'nama' => $row['nama_provinsi']
-            ];
-        }
-        $stmt->close();
-        return $provinsi;
-    }
-
-    // Method untuk mengedit data provinsi
-    public function updateProvinsi($data){
-        $idProvinsi = $data['id'];
-        $namaProvinsi = $data['nama'];
-        $query = "UPDATE tb_provinsi SET nama_provinsi = ? WHERE id_provinsi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("si", $namaProvinsi, $idProvinsi);
-        $result = $stmt->execute();
-        $stmt->close();
-        return $result;
-    }
-
-    // Method untuk menghapus data provinsi
-    public function deleteProvinsi($id){
-        $query = "DELETE FROM tb_provinsi WHERE id_provinsi = ?";
-        $stmt = $this->conn->prepare($query);
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param("i", $id);
-        $result = $stmt->execute();
-        $stmt->close();
-        return $result;
-    }
-
 }
-
 ?>
