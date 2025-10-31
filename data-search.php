@@ -31,12 +31,12 @@ if(isset($_GET['search'])){
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-sm-6">
-								<h3 class="mb-0">Cari Mahasiswa</h3>
+								<h3 class="mb-0">Cari Barang</h3>
 							</div>
 							<div class="col-sm-6">
 								<ol class="breadcrumb float-sm-end">
 									<li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
-									<li class="breadcrumb-item active" aria-current="page">Cari Data</li>
+									<li class="breadcrumb-item active" aria-current="page">Cari Data Barang</li>
 								</ol>
 							</div>
 						</div>
@@ -49,7 +49,7 @@ if(isset($_GET['search'])){
 							<div class="col-12">
 								<div class="card mb-3">
 									<div class="card-header">
-										<h3 class="card-title">Pencarian Mahasiswa</h3>
+										<h3 class="card-title">Pencarian Barang</h3>
 										<div class="card-tools">
 											<button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" title="Collapse">
 												<i data-lte-icon="expand" class="bi bi-plus-lg"></i>
@@ -63,8 +63,8 @@ if(isset($_GET['search'])){
 									<div class="card-body">
 										<form action="data-search.php" method="GET">
 											<div class="mb-3">
-												<label for="search" class="form-label">Masukkan NIM atau Nama Mahasiswa</label>
-												<input type="text" class="form-control" id="search" name="search" placeholder="Cari berdasarkan NIM atau Nama Mahasiswa" value="<?php echo $kataKunci; ?>" required>
+												<label for="search" class="form-label">Masukkan Nama Atau ID Barang</label>
+												<input type="text" class="form-control" id="search" name="search" placeholder="Cari berdasarkan ID Atau Nama Barang" value="<?php echo $kataKunci; ?>" required>
 											</div>
 											<button type="submit" class="btn btn-primary"><i class="bi bi-search-heart-fill"></i> Cari</button>
 										</form>
@@ -140,13 +140,13 @@ if(isset($_GET['search'])){
 											} else {
 												// Menampilkan pesan jika tidak ada data mahasiswa yang ditemukan
 												echo '<div class="alert alert-warning" role="alert">
-														Tidak ditemukan data mahasiswa yang sesuai dengan kata kunci "<strong>'.htmlspecialchars($_GET['search']).'</strong>".
+														Tidak ditemukan data Barang yang sesuai dengan kata kunci "<strong>'.htmlspecialchars($_GET['search']).'</strong>".
 													  </div>';
 											}
 										} else {
 											// Menampilkan pesan jika form pencarian belum disubmit
 											echo '<div class="alert alert-info" role="alert">
-													Silakan masukkan kata kunci pencarian di atas untuk mencari data mahasiswa.
+													Silakan masukkan kata kunci pencarian di atas untuk mencari data Barang.
 												  </div>';
 										}
 										?>
